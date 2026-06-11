@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+</head>
+<body>
+
+    <form action="#">
+        <label for="numero1">numero1:</label>
+        <input type="number" id="numero1" name="numero1">
+
+        <label for="numero2">numero2:</label>
+        <input type="number" id="numero2" name="numero2">
+
+        <button type="button" id="btnSuma">Sumar</button>
+        <button type="button" id="btnResta">Restar</button>
+        <button type="button" id="btnMulti">Multiplicar</button>
+        <button type="button" id="btnDiv">Dividir</button>
+    </form>
+
+    <p id="resultado">Resultado: </p>
+
+    <script>
+        
+        const input1 = document.getElementById("numero1");
+        const input2 = document.getElementById("numero2");
+        const resultado = document.getElementById("resultado");
+  
+        function obtenerNumeros() {
+            const n1 = parseFloat(input1.value);
+            const n2 = parseFloat(input2.value);
+            return { n1, n2 };
+        }
+
+        // Sumar
+        document.getElementById("btnSuma").addEventListener("click", function() {
+            const { n1, n2 } = obtenerNumeros();
+            resultado.textContent = "Resultado: " + (n1 + n2);
+            input1.value = "";
+            input2.value = "";
+        });
+
+        // Restar
+        document.getElementById("btnResta").addEventListener("click", function() {
+            const { n1, n2 } = obtenerNumeros();
+            resultado.textContent = "Resultado: " + (n1 - n2);
+            input1.value = "";
+            input2.value = "";
+        });
+
+        // Multiplicar
+        document.getElementById("btnMulti").addEventListener("click", function() {
+            const { n1, n2 } = obtenerNumeros();
+            resultado.textContent = "Resultado: " + (n1 * n2);
+            input1.value = "";
+            input2.value = "";
+        
+        });
+
+        // Dividir
+        document.getElementById("btnDiv").addEventListener("click", function() {
+            const { n1, n2 } = obtenerNumeros();
+            if (n2 === 0) {
+                resultado.textContent = "Error: no se puede dividir entre 0";
+            } else {
+                resultado.textContent = "Resultado: " + (n1 / n2);
+                input1.value = "";
+                input2.value = "";
+            }
+        });
+    </script>
+
+</body>
+</html>
+
+
+git add .
+git commit -m "calculadora con operaciones básicas"
+git push
