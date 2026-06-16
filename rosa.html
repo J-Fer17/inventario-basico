@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rosa Roja</title>
+  <style>
+
+    /* =============================================
+       RESET Y FONDO
+       ============================================= */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0e0e0e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+
+    /* =============================================
+       CONTENEDOR PRINCIPAL DE LA ROSA
+       Todos los elementos se posicionan DENTRO
+       de este div de 220x220px
+       ============================================= */
+
+    .rosa-wrap {
+      position: relative;
+      width: 220px;
+      height: 220px;
+    }
+
+
+    /* =============================================
+       TALLO
+       Se coloca justo debajo del contenedor.
+       Crece desde arriba hacia abajo con scaleY.
+       ============================================= */
+
+    .tallo {
+      position: absolute;
+      left: 50%;
+      top: 100%;                          /* empieza donde termina la rosa */
+      transform: translateX(-50%);
+      width: 6px;
+      height: 200px;
+      background: linear-gradient(to bottom, #3a7d44, #2d5a2d);
+      border-radius: 0 0 4px 4px;
+      transform-origin: top center;       /* crece desde arriba */
+      animation: crecerTallo 1.8s ease-out forwards;
+    }
+
+    @keyframes crecerTallo {
+      from { transform: translateX(-50%) scaleY(0); }
+      to   { transform: translateX(-50%) scaleY(1); }
+    }
+
+
+    /* =============================================
+       HOJAS
+       border-radius asimétrico crea la forma
+       de hoja. Se rotan con transform.
+       ============================================= */
+
+    .hoja {
+      position: absolute;
+      width: 55px;
+      height: 28px;
+      background: linear-gradient(135deg, #4a9a55, #2d6a2d);
+      border-radius: 50% 0 50% 0;        /* forma orgánica de hoja */
+      top: calc(100% + 70px);
+      opacity: 0;
+    }
+
+    .hoja-izq {
+      left: calc(50% - 58px);
+      animation: aparecerHoja 1s ease-out 1.6s forwards;
+    }
+
+    .hoja-der {
+      left: calc(50% + 3px);
+      animation: aparecerHojaDer 1s ease-out 2s forwards;
+    }
+
+    @keyframes aparecerHoja {
+      from { opacity: 0; transform: rotate(-30deg) scale(0); }
+      to   { opacity: 1; transform: rotate(-30deg) scale(1); }
+    }
+
+    @keyframes aparecerHojaDer {
+      from { opacity: 0; transform: rotate(30deg) scaleX(-1) scale(0); }
+      to   { opacity: 1; transform: rotate(30deg) scaleX(-1) scale(1); }
+    }
+
+
+    /* =============================================
+       PÉTALOS — ESTILOS BASE
+       Cada pétalo es un div con:
+         - border-radius asimétrico → forma de pétalo
+         - transform-origin: bottom center → rota desde la base
+         - --r: variable CSS con el ángulo de rotación
+         - animation: aparece y rota desde el centro
+       ============================================= */
+
+    .petalo {
+      position: absolute;
+      width: 80px;
+      height: 100px;
+
+      /* Esta combinación de border-radius crea la forma de pétalo:
+         arriba redondeado (50% 50%), abajo más apuntado (40% 40%)
+         y en vertical más pronunciado arriba (60%) que abajo (40%) */
+      border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+
+      top: 50%;
+      left: 50%;
+      transform-origin: bottom center;   /* rota desde la punta inferior */
+      opacity: 0;
+      animation: abrirPetalo 0.9s ease-out forwards;
+    }
+
+    @keyframes abrirPetalo {
+      from {
+        opacity: 0;
+        transform: rotate(var(--r, 0deg)) scale(0.3);
+      }
+      to {
+        opacity: 1;
+        transform: rotate(var(--r, 0deg)) scale(1);
+      }
+    }
+
+
+    /* =============================================
+       CAPA EXTERIOR — 6 pétalos grandes
+       Se distribuyen cada 60° (360 / 6 = 60)
+       margin negativo los centra en el contenedor
+       ============================================= */
+
+    .p1 { background: radial-gradient(ellipse at 40% 30%, #ff4d4d, #aa0011); margin-left: -40px; margin-top: -95px; --r: 0deg;   animation-delay: 0.2s; }
+    .p2 { background: radial-gradient(ellipse at 40% 30%, #ff5555, #bb0015); margin-left: -40px; margin-top: -95px; --r: 60deg;  animation-delay: 0.4s; }
+    .p3 { background: radial-gradient(ellipse at 40% 30%, #ff4040, #aa000e); margin-left: -40px; margin-top: -95px; --r: 120deg; animation-delay: 0.6s; }
+    .p4 { background: radial-gradient(ellipse at 40% 30%, #ff4d4d, #bb0012); margin-left: -40px; margin-top: -95px; --r: 180deg; animation-delay: 0.8s; }
+    .p5 { background: radial-gradient(ellipse at 40% 30%, #ff5050, #aa0010); margin-left: -40px; margin-top: -95px; --r: 240deg; animation-delay: 1.0s; }
+    .p6 { background: radial-gradient(ellipse at 40% 30%, #ff4545, #cc0018); margin-left: -40px; margin-top: -95px; --r: 300deg; animation-delay: 1.2s; }
+
+
+    /* =============================================
+       CAPA MEDIA — 6 pétalos medianos
+       Rotados 30° respecto a la capa exterior
+       para llenar los espacios entre pétalos
+       ============================================= */
+
+    .pm {
+      width: 64px;
+      height: 80px;
+      margin-left: -32px;
+      margin-top: -75px;
+    }
+
+    .pm1 { background: radial-gradient(ellipse at 40% 25%, #ff6666, #cc0020); --r: 30deg;  animation-delay: 1.4s; }
+    .pm2 { background: radial-gradient(ellipse at 40% 25%, #ff5555, #bb001a); --r: 90deg;  animation-delay: 1.55s; }
+    .pm3 { background: radial-gradient(ellipse at 40% 25%, #ff6060, #cc001e); --r: 150deg; animation-delay: 1.7s; }
+    .pm4 { background: radial-gradient(ellipse at 40% 25%, #ff5050, #bb0018); --r: 210deg; animation-delay: 1.85s; }
+    .pm5 { background: radial-gradient(ellipse at 40% 25%, #ff6666, #cc0022); --r: 270deg; animation-delay: 2.0s; }
+    .pm6 { background: radial-gradient(ellipse at 40% 25%, #ff5858, #bb001c); --r: 330deg; animation-delay: 2.15s; }
+
+
+    /* =============================================
+       CAPA INTERIOR — 5 pétalos pequeños
+       Más claros para simular que están más
+       cerca de la fuente de luz
+       ============================================= */
+
+    .pi {
+      width: 44px;
+      height: 58px;
+      margin-left: -22px;
+      margin-top: -52px;
+    }
+
+    .pi1 { background: radial-gradient(ellipse at 40% 20%, #ff8080, #dd0025); --r: 18deg;  animation-delay: 2.3s; }
+    .pi2 { background: radial-gradient(ellipse at 40% 20%, #ff7070, #cc001f); --r: 90deg;  animation-delay: 2.45s; }
+    .pi3 { background: radial-gradient(ellipse at 40% 20%, #ff8888, #dd0028); --r: 162deg; animation-delay: 2.6s; }
+    .pi4 { background: radial-gradient(ellipse at 40% 20%, #ff7777, #cc0022); --r: 234deg; animation-delay: 2.75s; }
+    .pi5 { background: radial-gradient(ellipse at 40% 20%, #ff8080, #dd0026); --r: 306deg; animation-delay: 2.9s; }
+
+
+    /* =============================================
+       CENTRO
+       Círculo pequeño que tapa la base de todos
+       los pétalos y completa la flor
+       ============================================= */
+
+    .centro {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #ff9999, #880010);
+      top: 50%;
+      left: 50%;
+      margin-left: -14px;
+      margin-top: -14px;
+      z-index: 20;
+      opacity: 0;
+      animation: abrirPetalo 0.7s ease-out 3.1s forwards;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+
+    /* =============================================
+       GOTAS DE ROCÍO
+       Pequeños óvalos semitransparentes que
+       simulan agua sobre los pétalos
+       ============================================= */
+
+    .rocio {
+      position: absolute;
+      width: 7px;
+      height: 9px;
+      background: radial-gradient(
+        ellipse at 40% 30%,
+        rgba(200, 230, 255, 0.95),
+        rgba(150, 200, 255, 0.6)
+      );
+      /* Óvalo con la punta hacia abajo → gota de agua */
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      opacity: 0;
+      animation: gotaRocio 0.7s ease-out forwards;
+      z-index: 25;
+    }
+
+    .r1 { top: 28%; left: 62%; animation-delay: 3.4s; }
+    .r2 { top: 38%; left: 22%; animation-delay: 3.6s; }
+    .r3 { top: 20%; left: 44%; animation-delay: 3.8s; }
+
+    @keyframes gotaRocio {
+      from { opacity: 0; transform: scale(0); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="rosa-wrap">
+
+    <!-- TALLO Y HOJAS -->
+    <div class="tallo"></div>
+    <div class="hoja hoja-izq"></div>
+    <div class="hoja hoja-der"></div>
+
+    <!-- CAPA EXTERIOR (6 pétalos grandes, cada 60°) -->
+    <div class="petalo p1"></div>
+    <div class="petalo p2"></div>
+    <div class="petalo p3"></div>
+    <div class="petalo p4"></div>
+    <div class="petalo p5"></div>
+    <div class="petalo p6"></div>
+
+    <!-- CAPA MEDIA (6 pétalos medianos, offset 30°) -->
+    <div class="petalo pm pm1"></div>
+    <div class="petalo pm pm2"></div>
+    <div class="petalo pm pm3"></div>
+    <div class="petalo pm pm4"></div>
+    <div class="petalo pm pm5"></div>
+    <div class="petalo pm pm6"></div>
+
+    <!-- CAPA INTERIOR (5 pétalos pequeños) -->
+    <div class="petalo pi pi1"></div>
+    <div class="petalo pi pi2"></div>
+    <div class="petalo pi pi3"></div>
+    <div class="petalo pi pi4"></div>
+    <div class="petalo pi pi5"></div>
+
+    <!-- CENTRO -->
+    <div class="centro"></div>
+
+    <!-- GOTAS DE ROCÍO -->
+    <div class="rocio r1"></div>
+    <div class="rocio r2"></div>
+    <div class="rocio r3"></div>
+
+  </div>
+
+</body>
+</html>
